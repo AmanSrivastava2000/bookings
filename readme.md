@@ -6,3 +6,4 @@ The repository for Building Modern Web Applications with Go.
 -Uses the [chi router](https://github.com/go-chi/chi)
 -Uses [alex edwards scs](https://github.com/alexedwards/scs/v2) session management
 -Uses [nosurf](https://github.com/justinas/nosurf)
+
