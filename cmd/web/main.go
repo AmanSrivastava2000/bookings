@@ -1,27 +1,28 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
-	"github.com/AmanSrivastava2000/bookings/cmd/pkg/config"
-	"github.com/AmanSrivastava2000/bookings/cmd/pkg/handlers"
-	"github.com/AmanSrivastava2000/bookings/cmd/pkg/render"
 	"github.com/alexedwards/scs/v2"
+	"github.com/tsawler/bookings-app/internal/config"
+	"github.com/tsawler/bookings-app/internal/handlers"
+	"github.com/tsawler/bookings-app/internal/render"
 )
 
-const portNo = ":8080"
+const portNumber = ":8080"
 
 var app config.AppConfig
 var session *scs.SessionManager
 
+// main is the main function
 func main() {
-
-	//change this to true when in production
+	// change this to true when in production
 	app.InProduction = false
 
-	//setting sessions
+	// set up the session
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
 	session.Cookie.Persist = true
@@ -30,27 +31,23 @@ func main() {
 
 	app.Session = session
 
-	//load template cache
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
-		log.Fatal("cannot create template cache.", err)
+		log.Fatal("cannot create template cache")
 	}
 
-	//stroring the tc in templateCache member of app object
 	app.TemplateCache = tc
 	app.UseCache = false
 
-	//make the repo object by passing the app as to newRepo function in handlers.
 	repo := handlers.NewRepo(&app)
-	//pass repo object to newHandlers function of handler to initialise the Repo variable there
 	handlers.NewHandlers(repo)
 
-	//passing app to render's newTemplates function so that it can be used to get template cache inside it
 	render.NewTemplates(&app)
 
-	//setting up the routes:
+	fmt.Println(fmt.Sprintf("Staring application on port %s", portNumber))
+
 	srv := &http.Server{
-		Addr:    portNo,
+		Addr:    portNumber,
 		Handler: routes(&app),
 	}
 
@@ -58,5 +55,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }

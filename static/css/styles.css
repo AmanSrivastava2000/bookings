@@ -7,6 +7,10 @@
     font-size: 80%;
 }
 
+.room-image {
+    max-width: 50%;
+}
+
 .notie-container {
     box-shadow: none;
 }
