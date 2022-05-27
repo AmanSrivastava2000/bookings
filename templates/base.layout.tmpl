@@ -144,6 +144,7 @@
             })
         }
 
+
         function notifyModal(title, text, icon, confirmationButtonText) {
             Swal.fire({
                 title: title,
@@ -152,6 +153,19 @@
                 confirmButtonText: confirmationButtonText
             })
         }
+
+        {{with .Error}}
+            notify("{{.}}", "error")
+        {{end}}
+
+        {{with .Flash}}
+            notify("{{.}}", "flash")
+        {{end}}
+
+        {{with .Warning}}
+            notify("{{.}}", "warning")
+        {{end}}
+
 
         function Prompt() {
             let toast = function (c) {
@@ -224,13 +238,13 @@
                     focusConfirm: false,
                     showCancelButton: true,
                     willOpen: () => {
-                        if(c.willOpen !== undefined){
+                        if (c.willOpen !== undefined) {
                             c.willOpen();
                         }
                     },
                     didOpen: () => {
-                        if(c.didOpen !== undefined){
-                            c.didOpen()
+                        if (c.didOpen !== undefined){
+                            c.didOpen();
                         }
                     },
                     preConfirm: () => {
@@ -241,19 +255,17 @@
                     }
                 })
 
-                if(result){
-                    if(result.dismiss !== Swal.DismissReason.cancel){
-                        if(result.value !== ""){
-                            if(c.callback !== undefined){
-                                c.callback(result)
+                if (result) {
+                    if (result.dismiss !== Swal.DismissReason.cancel) {
+                        if (result.value !== "") {
+                            if (c.callback !== undefined) {
+                                c.callback(result);
                             }
+                        } else {
+                            c.callback(false);
                         }
-                        else{
-                            c.callback(false)
-                        }
-                    }
-                    else{
-                        c.callback(false)
+                    } else {
+                        c.callback(false);
                     }
                 }
             }
